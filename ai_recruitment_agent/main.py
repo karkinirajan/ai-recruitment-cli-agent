@@ -99,25 +99,40 @@ def process_documents(
     cv_folder_path: Annotated[
         Path,
         typer.Argument(
-            exists=True, file_okay=False, dir_okay=True, readable=True, resolve_path=True,
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+            resolve_path=True,
             help="Folder containing CV files (.pdf / .docx).",
         ),
     ],
     jd_pdf_path: Annotated[
         Path,
         typer.Argument(
-            exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True,
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True,
             help="Job Description PDF file.",
         ),
     ],
-    # Use Typer's classic default-value declaration for options. This ensures
-    # the options remain visible in generated help across supported versions.
-    notion_db_id_cli: str | None = typer.Option(
-        None, "--notion-db-id", "-n", help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env)."
-    ),
-    data_source_id_cli: str | None = typer.Option(
-        None, "--data-source-id", help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID)."
-    ),
+    notion_db_id_cli: Annotated[
+        str | None,
+        typer.Option(
+            "--notion-db-id",
+            "-n",
+            help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env).",
+        ),
+    ] = None,
+    data_source_id_cli: Annotated[
+        str | None,
+        typer.Option(
+            "--data-source-id",
+            help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID).",
+        ),
+    ] = None,
 ) -> None:
     """Screen CVs against a Job Description and push results to Notion. Exits 1 if any CV could not be processed."""
     settings = Settings.load()
@@ -275,12 +290,21 @@ def _screen_one(cv_path: Path, screener: Screener, jd_text: str, details: dict[s
 
 @app.command(name="setup-notion", help="Add required properties to an existing Notion database.")
 def setup_notion(
-    notion_db_id: str | None = typer.Option(
-        None, "--notion-db-id", "-n", help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env)."
-    ),
-    data_source_id_cli: str | None = typer.Option(
-        None, "--data-source-id", help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID)."
-    ),
+    notion_db_id: Annotated[
+        str | None,
+        typer.Option(
+            "--notion-db-id",
+            "-n",
+            help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env).",
+        ),
+    ] = None,
+    data_source_id_cli: Annotated[
+        str | None,
+        typer.Option(
+            "--data-source-id",
+            help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID).",
+        ),
+    ] = None,
 ) -> None:
     """Configure a Notion database with all properties required for CV screening."""
     settings = Settings.load()
