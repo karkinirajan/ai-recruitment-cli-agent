@@ -29,3 +29,7 @@ build/
 # Local sample data (CVs and job descriptions)
 cvs/
 jds/
+
+# Coverage
+.coverage
+htmlcov/

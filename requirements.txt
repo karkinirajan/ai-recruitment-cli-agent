@@ -1,6 +1,0 @@
-typer[all]
-python-dotenv
-google-genai
-notion-client
-pdfplumber
-python-docx
