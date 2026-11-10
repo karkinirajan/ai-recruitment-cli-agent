@@ -94,16 +94,6 @@ def main_callback(
         say("Run [cyan]ai-recruit process --help[/cyan] for full usage details.")
 
 
-DbOption = Annotated[
-    str | None,
-    typer.Option("--notion-db-id", "-n", help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env)."),
-]
-SourceOption = Annotated[
-    str | None,
-    typer.Option("--data-source-id", help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID)."),
-]
-
-
 @app.command(name="process", help="Screen CVs in a folder against a Job Description PDF.")
 def process_documents(
     cv_folder_path: Annotated[
@@ -120,8 +110,14 @@ def process_documents(
             help="Job Description PDF file.",
         ),
     ],
-    notion_db_id_cli: DbOption = None,
-    data_source_id_cli: SourceOption = None,
+    # Use Typer's classic default-value declaration for options. This ensures
+    # the options remain visible in generated help across supported versions.
+    notion_db_id_cli: str | None = typer.Option(
+        None, "--notion-db-id", "-n", help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env)."
+    ),
+    data_source_id_cli: str | None = typer.Option(
+        None, "--data-source-id", help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID)."
+    ),
 ) -> None:
     """Screen CVs against a Job Description and push results to Notion. Exits 1 if any CV could not be processed."""
     settings = Settings.load()
@@ -278,7 +274,14 @@ def _screen_one(cv_path: Path, screener: Screener, jd_text: str, details: dict[s
 
 
 @app.command(name="setup-notion", help="Add required properties to an existing Notion database.")
-def setup_notion(notion_db_id: DbOption = None, data_source_id_cli: SourceOption = None) -> None:
+def setup_notion(
+    notion_db_id: str | None = typer.Option(
+        None, "--notion-db-id", "-n", help="Notion database ID (overrides DEFAULT_NOTION_DB_ID in .env)."
+    ),
+    data_source_id_cli: str | None = typer.Option(
+        None, "--data-source-id", help="Notion data source ID, for a database with several (overrides NOTION_DATA_SOURCE_ID)."
+    ),
+) -> None:
     """Configure a Notion database with all properties required for CV screening."""
     settings = Settings.load()
     errors: list[str] = []
