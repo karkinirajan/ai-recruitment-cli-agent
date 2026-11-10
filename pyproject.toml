@@ -8,7 +8,7 @@ version = "0.3.2"
 description = "AI-powered CV screening CLI — ranks candidates against a Job Description using Google Gemini and pushes results to Notion"
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "kneeraazon404" }]
 keywords = ["recruitment", "cv", "screening", "gemini", "notion", "cli", "ai"]
 classifiers = [
@@ -18,26 +18,27 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Office/Business",
     "Topic :: Utilities",
 ]
 dependencies = [
-    "typer[all]>=0.9.0",
-    "python-dotenv>=1.0.0",
-    "google-genai>=1.0.0",
-    "notion-client>=2.0.0",
-    "pdfplumber>=0.10.0",
-    "python-docx>=1.0.0",
+    "typer",
+    "rich",
+    "python-dotenv",
+    "google-genai",
+    "notion-client",
+    "pdfplumber",
+    "python-docx",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pytest>=7.0.0",
-    "pytest-mock>=3.0.0",
+    "pytest",
+    "ruff",
 ]
 
 [project.scripts]
@@ -60,8 +61,16 @@ exclude = [
     "/jds",
     "/.env*",
     "/main.py",
-    "/requirements.txt",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"
+extend-exclude = ["tests/mutation"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B", "I", "UP"]
